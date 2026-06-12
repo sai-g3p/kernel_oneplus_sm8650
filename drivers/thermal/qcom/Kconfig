@@ -293,3 +293,10 @@ config QTI_GPU_DUMP_SKIP_COOLING_DEVICE
 	  SDI path to disable GFX rail and skip GPU Scan dump when ambient temperature
 	  is more than the recommended threshold.
 
+config QCOM_BATTERY_THERMAL_POLICY
+	tristate "Qualcomm battery-backed thermal policy"
+	depends on THERMAL && OF
+	default n
+	help
+	  Uses power supply psy source name and power supply notifier to implement
+	  cooling device trips for early battery temperature thermal mitigation.
