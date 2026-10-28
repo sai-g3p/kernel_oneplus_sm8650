@@ -238,7 +238,7 @@ static unsigned int get_next_freq(struct sugov_policy *sg_policy,
 
 static inline unsigned int sugov_dvfs_headroom_factor(unsigned int cpu)
 {
-	if (cpu <= 1)
+	if (cpu <= 2)
 		return SUGOV_DVFS_HEADROOM_FACTOR_LITTLE;
 
 	if (cpu == 7)
