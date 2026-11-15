@@ -28,7 +28,6 @@
 #include <linux/export.h>
 #include <linux/kernel.h>
 #include <linux/sched.h>
-#include <linux/sched_task_critical.h>
 #include <linux/init.h>
 #include <linux/signal.h>
 #include <linux/completion.h>
@@ -56,11 +55,6 @@
 #include "workqueue_internal.h"
 
 #include <trace/hooks/wqlockup.h>
-
-static __always_inline bool task_is_critical(void)
-{
-	return sched_task_critical(current);
-}
 
 /* events/workqueue.h uses default TRACE_INCLUDE_PATH */
 #undef TRACE_INCLUDE_PATH
@@ -4235,9 +4229,9 @@ static int alloc_and_link_pwqs(struct workqueue_struct *wq)
 	int cpu, ret;
 	bool skip = false;
 
-	if (task_is_critical())
-		highpri = true;
-
+	wq->cpu_pwq = alloc_percpu(struct pool_workqueue *);
+	if (!wq->cpu_pwq)
+		goto enomem;
 	if (!(wq->flags & WQ_UNBOUND)) {
 		wq->cpu_pwqs = alloc_percpu(struct pool_workqueue);
 		if (!wq->cpu_pwqs)
