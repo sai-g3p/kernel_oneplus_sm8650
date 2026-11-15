@@ -5289,12 +5289,6 @@ static int isolate_folios(struct lruvec *lruvec, struct scan_control *sc, int sw
 		type = get_type_to_scan(lruvec, swappiness, &tier);
 
 	trace_android_vh_isolate_folio_type(swappiness, &type, &tier, &type_to_scan);
-
-	if (task_is_critical()) {
-		type = LRU_GEN_FILE;
-		type_to_scan = LRU_GEN_FILE + 1;
-	}
-
 	for (i = !swappiness; i < type_to_scan; i++) {
 		if (tier < 0)
 			tier = get_tier_idx(lruvec, type);
